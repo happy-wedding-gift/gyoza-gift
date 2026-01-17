@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gyoza Feast! - 祝・入籍ギフト【完全体】</title>
+    <title>Gyoza Feast! - 祝・入籍ギフト【完全版】</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -25,51 +25,49 @@
 </head>
 <body>
     <div id="root">
-        <div style="display:flex;justify-content:center;align-items:center;height:100vh;color:white;font-weight:900;font-size:24px;text-align:center;">
-            パンダが会場を設営中あるよ... 🐼🍥<br>
-            <span style="font-size:14px;font-weight:normal;opacity:0.8;">(5秒以上かかる場合は Cmd+Opt+J でエラーを確認)</span>
+        <div style="display:flex;justify-content:center;align-items:center;height:100vh;color:white;font-weight:900;font-size:24px;">
+            パンダが会場を設営中あるよ... 🐼🍥
         </div>
     </div>
 
     <script type="text/babel">
         const { useState, useMemo, useEffect } = React;
 
-        // アイコンヘルパー
-        const Icon = ({ name, size = 24, className = "" }) => {
+        // アイコンエラーを完全に防ぐためのコンポーネント
+        const GyozaIcon = ({ name, size = 24, className = "" }) => {
             useEffect(() => { if (window.lucide) window.lucide.createIcons(); }, [name]);
             return <i data-lucide={name} style={{ width: size, height: size }} className={className}></i>;
         };
 
         // --- 管理者設定 ---
-        const ORDER_COMPLETED = false; // 履歴ページを表示
+        const ORDER_COMPLETED = false; // trueにすると配送履歴ページになります
         const ORDER_STATUS = 'shipping'; 
         const DELIVERY_MAN_IMAGE = "https://otona2020.itembox.design/product/022/000000002208/000000002208-01-l.jpg?t=20260116095203"; 
         const COMPLETED_MESSAGE = "全国の餃子職人たちが、順次発送の準備を進めているあるよ！";
         const DELIVERY_ESTIMATE = "2月上旬頃に到着予定！";
 
-        // --- 注文内容 ---
         const ORDERED_ITEMS = [
             { id: 1, quantity: 1, status: 'shipping', arrivalDate: '2月2日(月) 到着予定' },
             { id: 14, quantity: 1, status: 'preparing', arrivalDate: '順次発送予定' },
             { id: 10, quantity: 1, status: 'delivered', arrivalDate: '1月28日 到着しました！' }
         ];
 
-        // --- 餃子データ14種完全復元 (バッククォートでエラー防止) ---
+        // --- 餃子データ14件 復元 ---
         const GYOZA_DATA = [
-            { id: 7, name: `北海道の至宝！『天のびろく』極上3種食べ比べ・道産素材の共演セット`, region: `北海道地方`, prefecture: `北海道`, description: `千歳発！道産小麦100%のモチモチ皮と, ブランド肉『夢の大地』の旨味。`, longDescription: `北海道千歳市で「本当に美味しい餃子を」という想いから生まれた『天のびろく』。最大の特徴は、北海道産の小麦粉を独自にブレンドした、驚くほど弾力のある皮。餡には十勝のブランド豚『夢の大地』を贅沢に使用。`, cooking: `多めの差し水で皮をじっくり蒸し上げ、仕上げに油で底面を焼き固めるのがコツ！`, pairing: `冷えた十勝ワイン 🍷`, sauce: `まずはそのまま。次に岩塩で肉の旨味を引き立てるのがオススメ！`, price: 4580, count: 36, tags: ["千歳名物", "道産小麦"], color: "bg-blue-50", icon: "wheat", image: "https://www.otoriyose.net/upload/item/62/00006247/344317321b981a9.jpg" },
-            { id: 8, name: `中毒性注意！『ぎょうざの宝永』とろ〜り3種ブレンド・魔法のチーズ餃子`, region: `北海道地方`, prefecture: `北海道`, description: `北海道音更町発。パンチの効いた宝永餡に、特製さいころチーズがゴロゴロ！`, longDescription: `音更町での創業以来、強烈なパンチと旨味で全国にファンを持つ『宝永』が贈る究極のチーズ餃子。餡の中に上質な3種類のチーズを贅沢にブレンドしました。`, cooking: `チーズが溶け出さないよう、焼き上がりは手早くフライパンからお皿へ！`, pairing: `強炭酸のハイボール 🥃`, sauce: `何もつけずにそのまま！または黒胡椒をたっぷりかけて。`, price: 2680, count: 15, tags: ["音更発祥", "濃厚チーズ"], color: "bg-yellow-50", icon: "cheese", image: "https://www.otoriyose.net/upload/item/48/00004831/dfa372bd6d1f264.jpg" },
-            { id: 9, name: `岩手の恵み！『粉夢』とろシャキ食感！しんいちろう餃子（ねばり）`, region: `東北地方`, prefecture: `岩手`, description: `岩手町特産の『ねばり芋』が餡に！とろ〜り＆シャキシャキの驚き食感。`, longDescription: `主役は高級種『ねばり芋』。加熱することで生まれる「とろ〜っ」とした滑らかさと、絶妙な「シャキシャキッ」とした食感のコントラストが唯一無二。`, cooking: `水餃子で『とろシャキ』感をダイレクトに味わうのがおすすめ！`, pairing: `キリッと冷えた日本酒 🍶`, sauce: `醤油と少しの辣油でシンプルに。`, price: 2080, count: 24, tags: ["岩手名物", "ねばり芋"], color: "bg-emerald-50", icon: "sprout", image: "https://www.otoriyose.net/upload/item/91/00009103/396685c4d01894d.jpg" },
-            { id: 10, name: `情熱の紅白！『餃子の餃天』ハレの日を彩る・無添加モチモチ紅白餃子セット`, region: `東北地方`, prefecture: `秋田`, description: `秋田発, 見た目も華やかな紅白の贈り物。化学調味料不使用。`, longDescription: `秋田で絶大な支持を得る『餃天』の代名詞。慶事にふさわしい紅白の皮は、無添加にこだわり抜いています。入籍祝いに最もふさわしい逸品。`, cooking: `紅白を交互に並べて焼くと、食卓が一気におめでたい雰囲気に！`, pairing: `シャンパン 🥂`, sauce: `タレなしで皮の甘みと餡の旨味を感じて。`, price: 3796, count: 24, tags: ["秋田の名店", "紅白でお祝い"], color: "bg-red-100", icon: "heart", image: "https://www.otoriyose.net/upload/item/53/00005393/6683c2dd7910821.jpg" },
-            { id: 3, name: `浦和の至宝！『うらわ餃子』3種バラエティ・欲張り全味制覇セット`, region: `関東地方`, prefecture: `埼玉`, description: `埼玉・浦和発！野菜の旨味が主役の『無添加・手作り』。`, longDescription: `化学調味料不使用で毎日食べても飽きない優しい味わい。レギュラー、しそ、旨辛の3種類を一気に楽しめる贅沢セットです。`, cooking: `多めの差し水で蒸し焼きに。仕上げに油を回しかけてパリッと！`, pairing: `炊き立ての白米 🍚`, sauce: `しそにはレモンと塩がベストマッチ！`, price: 5123, count: 30, tags: ["浦和名物", "無添加"], color: "bg-green-50", icon: "leaf", image: "https://imagedelivery.net/QondspN4HIUvB_R16-ddAQ/6020a530c19c45763fd7f2e3/f1c45bb3a91a8e34727a.jpeg" },
-            { id: 11, name: `宇都宮の真髄！『和の中』皮から手作り・医食同源の極み薬膳餃子`, region: `関東地方`, prefecture: `栃木`, description: `宇都宮の人気店。熟練の職人が皮から一枚ずつ手作り。薬膳の香り。`, longDescription: `餃子の聖地・宇都宮の名店。熟練の職人が一枚ずつ皮を手作り。身体の内側から温まる薬膳のエッセンスが魂を揺さぶります。`, cooking: `ぜひ『水餃子』でお召し上がりください。皮の弾力が際立ちます。`, pairing: `滋味深い中国茶 🍲`, sauce: `黒酢に生姜をたっぷり。薬膳の香りが華やかになります。`, price: 2550, count: 30, tags: ["宇都宮餃子", "薬膳"], color: "bg-slate-50", icon: "sparkles", image: "https://www.otoriyose.net/upload/item/62/00006270/dacab781bd14b4e.jpg" },
-            { id: 14, name: `石川の巨星！『餃子専門店ぽう』食べ応えMAX！大きな餃子人気3種セット`, region: `北陸地方`, prefecture: `石川`, description: `1個が通常の約2倍！圧倒的なボリューム。化学調味料不使用。`, longDescription: `石川県能美市の名店。プレーン・生姜・梅の三連星。ジャンボサイズながら無添加なので後味はスッキリ。まさに「ご馳走」です。`, cooking: `大きめサイズなので、蒸し時間を少し長めに取るのがポイント。`, pairing: `石川の地酒 🍶`, sauce: `梅餃子には何もつけずに。生姜餃子には酢胡椒が相性抜群。`, price: 4880, count: 36, tags: ["ジャンボサイズ", "石川・能美"], color: "bg-orange-50", icon: "award", image: "https://otona2020.itembox.design/product/022/000000002208/000000002208-01-l.jpg" },
-            { id: 6, name: `富山の至宝！『ミッちゃん餃子』モチパリ薄皮・新鮮野菜たっぷりセット`, region: `北陸地方`, prefecture: `富山`, description: `富山で30年以上愛される行列店。野菜の甘みと生姜の香りが弾ける！`, longDescription: `機械を使わず仕上げる独自の『薄皮』。焼けばパリッと、茹でればモチッとする驚きの食感。野菜の天然の甘みが口いっぱいに広がります。`, cooking: `しっかり蒸し上げ、最後に強火で一気に水分を飛ばして焼き色を！`, pairing: `冷えた白ワイン 🥂`, sauce: `まずはそのまま。次に付属の特製タレをつけて！`, price: 3400, count: 24, tags: ["富山名物", "モチパリ食感"], color: "bg-yellow-100", icon: "smile", image: "https://www.otoriyose.net/upload/item/115/00011548/3f2310173c78c50.jpg" },
-            { id: 5, name: `大阪の超新星！『餃子専門店チャンピオン』黄金のひとくち餃子セット`, region: `近畿地方`, prefecture: `大阪`, description: `大阪・今里で行列必至の人気店. サクふわ食感の極み。`, longDescription: `脱水・寝かせにこだわった甘みたっぷりのキャベツ。鶏肉ベースであっさりしつつもコクがあり、手が止まらない魔力のひとくち餃子。`, cooking: `強火で一気に焼き上げるのが正解。焼き時間は短めで皮のパリッと感を！`, pairing: `焼酎のソーダ割り 🍸`, sauce: `焼きはタレなし、または酢胡椒がおすすめ。`, price: 2750, count: 35, tags: ["大阪・今里", "ひとくち"], color: "bg-red-50", icon: "trophy", image: "https://cdn.shopify.com/s/files/1/0622/4239/0147/files/IMG_2845.jpg?v=1739506998" },
-            { id: 12, name: `伊勢の伝説！『ぎょうざの美鈴』創業昭和38年・究極の手延べ餃子`, region: `近畿地方`, prefecture: `三重`, description: `伊勢神宮近くの超有名店。一枚ずつ皮を延ばし包み上げる職人技。`, longDescription: `注文を受けてから皮を延ばすお店の流儀を、冷凍餃子でも再現。地元の「たまり醤油」を使用した秘伝タレで味わう至高の体験。`, cooking: `仕上げに油を多めに使い、揚げ焼きのようにすることで皮がパリッと！`, pairing: `伊勢の地ビール 🍺`, sauce: `付属の『特製たまり醤油ダレ』が絶対条件。この深いコクこそが美鈴。`, price: 1900, count: 12, tags: ["伊勢の行列店", "手延べ皮"], color: "bg-amber-50", icon: "flame", image: "https://image1.shopserve.jp/gyouzanomisuzu-online.com/pic-labo/llimg/t0004_02.gif" },
-            { id: 1, name: `ミシュランの伝説！岡山「山東水餃大王」水餃子3種極みセット`, region: `中国地方`, prefecture: `岡山`, description: `ビブグルマン掲載！厚さ1mmの限界を超えたモチモチ食感。`, longDescription: `伝説のレジェンド店。特級点心師の技が光る「厚さ」にこだわった皮は、一度食べたら忘れられない圧倒的な弾力です。`, cooking: `沸騰したお湯に入れ、浮き上がってからさらに1分待つのが秘訣！`, pairing: `キンキンに冷えた中国茶 🍵`, sauce: `付属の「秘伝・豆豉タレ」一択！`, price: 6310, count: 40, tags: ["ミシュラン掲載", "究極モチモチ"], color: "bg-blue-50", icon: "star", image: "https://santon-suigyo-daio.com/wp-content/uploads/2022/11/FC_20221107_0004.jpg" },
-            { id: 4, name: `下関の至芸！『餃子屋はまだ』職人手包み・4種バラエティ食べ比べセット`, region: `中国地方`, prefecture: `山口`, description: `山口・下関の名店. マーボー・大葉・生姜・にんにくの全4味。`, longDescription: `職人の手包みだからこそ実現できる皮と具の密着感。4つの個性が一箱に。初めての方も必ず満足する欲張りセットです。`, cooking: `水分が飛んだら少量の油で焼き色を。手包みの薄皮がパリッと仕上がります！`, pairing: `レモンサワー 🍋`, sauce: `4種の味の違いをダイレクトに楽しむため、まずはタレなしで！`, price: 7410, count: 48, tags: ["下関名物", "手包み"], color: "bg-orange-50", icon: "package", image: "https://imagedelivery.net/QondspN4HIUvB_R16-ddAQ/5f3da475d7e1d840cef4e6d5/575936aee4322829d163.png" },
-            { id: 13, name: `長崎の色彩！『台湾料理 老李』彩り鮮やか・厳選5色水餃セット`, region: `九州地方`, prefecture: `長崎`, description: `長崎・新地中華街の名店。芳寿豚100%の肉汁が弾ける！`, longDescription: `最高級「長崎芳寿豚」を使用した餡。しそ、とうもろこし、パクチーなど目にも楽しい5色の贈り物。お祝いにぴったりの華やかな逸品。`, cooking: `浮き上がってから数分、皮がぷっくり膨らむまで茹でるのが正解！`, pairing: `台湾ビール 🍺`, sauce: `老李特製のタレ、またはシンプルに黒酢だけで。`, price: 6579, count: 40, tags: ["長崎中華街", "5色水餃"], color: "bg-pink-50", icon: "palette", image: "https://www.otoriyose.net/upload/item/121/00012158/878b29dfc1714f9.jpg" },
-            { id: 2, name: `別府のレジェンド！創業昭和22年『ぎょうざ専門店 湖月』究極薄皮セット`, region: `九州地方`, prefecture: `大分`, description: `大分・別府の行列店. 職人が手包みした『究極の薄皮』と旨味。`, longDescription: `昭和22年創業。向こう側が透けるほど薄く仕上げられた自家製の皮。外はカリッと、中はふっくらジューシーな最高のご馳走。`, cooking: `多めの油で揚げ焼きにするのが湖月流！皮のパリパリ感を極限まで。`, pairing: `キンキンに冷えたビール 🍺`, sauce: `まずはタレなしで素材の甘みを。次は酢多めの醤油ダレで。`, price: 6290, count: 50, tags: ["昭和22年創業", "別府の誇り"], color: "bg-yellow-50", icon: "map", image: "https://baseec-img-mng.akamaized.net/images/item/origin/d1dd9492ac43737c751b6943407ad9cd.jpg" }
+            { id: 7, name: "北海道の至宝！『天のびろく』極上3種食べ比べ", region: "北海道地方", prefecture: "北海道", description: "道産小麦100%のモチモチ皮と, ブランド肉『夢の大地』の旨味。", longDescription: "北海道千歳市発。独自ブレンドの皮とブランド豚『夢の大地』を贅沢に使用。溢れ出る肉汁はまさに絶品。", cooking: "多めの差し水で皮をじっくり蒸し上げ、仕上げに油で底面を焼き固めるのがコツ！", pairing: "冷えた十勝ワイン 🍷", sauce: "まずはそのまま、次に岩塩で！", price: 4580, count: 36, tags: ["千歳名物", "夢の大地豚"], color: "bg-blue-50", icon: "wheat", image: "https://www.otoriyose.net/upload/item/62/00006247/344317321b981a9.jpg" },
+            { id: 8, name: "中毒性注意！『ぎょうざの宝永』魔法のチーズ餃子", region: "北海道地方", prefecture: "北海道", description: "パンチの効いた宝永餡に、特製さいころチーズがゴロゴロ！", longDescription: "音更町発。餡の中に3種類のチーズを贅沢にブレンド。さらに中央にさいころチーズを入れた悪魔的旨さ。", cooking: "チーズが溶け出さないよう、焼き上がりは手早くフライパンからお皿へ！", pairing: "強炭酸ハイボール 🥃", sauce: "何もつけずにそのまま！", price: 2680, count: 15, tags: ["音更発祥", "濃厚チーズ"], color: "bg-yellow-50", icon: "cheese", image: "https://www.otoriyose.net/upload/item/48/00004831/dfa372bd6d1f264.jpg" },
+            { id: 9, name: "岩手の恵み！『粉夢』しんいちろう餃子（ねばり）", region: "東北地方", prefecture: "岩手", description: "岩手町特産の『ねばり芋』が餡に！とろ〜り＆シャキシャキ食感。", longDescription: "主役は高級種『ねばり芋』。加熱することで生まれる滑らかさと、シャキシャキ感のコントラストが唯一無二。", cooking: "まずは水餃子で『とろシャキ』感をダイレクトに味わうのがおすすめ！", pairing: "日本酒 🍶", sauce: "醤油と少しの辣油でシンプルに。", price: 2080, count: 24, tags: ["岩手名物", "ねばり芋"], color: "bg-emerald-50", icon: "sprout", image: "https://www.otoriyose.net/upload/item/91/00009103/396685c4d01894d.jpg" },
+            { id: 10, name: "情熱の紅白！『餃子の餃天』無添加モチモチ紅白餃子", region: "東北地方", prefecture: "秋田", description: "秋田発, 華やかな紅白。化学調味料不使用の圧倒的旨味。", longDescription: "秋田で絶大な支持を得る名店。慶事にふさわしい紅白の皮は完全無添加。入籍祝いに最もふさわしい逸品。", cooking: "紅白を交互に並べて焼くと、食卓が一気におめでたい雰囲気に！", pairing: "シャンパン 🥂", sauce: "タレなしで皮の甘みを感じて。", price: 3796, count: 24, tags: ["秋田の名店", "紅白でお祝い"], color: "bg-red-100", icon: "heart", image: "https://www.otoriyose.net/upload/item/53/00005393/6683c2dd7910821.jpg" },
+            { id: 3, name: "浦和の至宝！『うらわ餃子』3種バラエティ", region: "関東地方", prefecture: "埼玉", description: "埼玉・浦和発！野菜の旨味が主役。定番・しそ・旨辛セット。", longDescription: "浦和の住宅街で話題沸騰。化学調味料不使用で毎日食べても飽きない。お子様からお年寄りまで安心の手作り。", cooking: "冷凍のまま多めの差し水で蒸し焼きにし、油を回しかけてパリッと！", pairing: "麦茶、または白米 🍚", sauce: "レギュラーには酢胡椒、しそにはレモンと塩がベスト！", price: 5123, count: 30, tags: ["浦和名物", "無添加"], color: "bg-green-50", icon: "leaf", image: "https://imagedelivery.net/QondspN4HIUvB_R16-ddAQ/6020a530c19c45763fd7f2e3/f1c45bb3a91a8e34727a.jpeg" },
+            { id: 11, name: "宇都宮の真髄！『和の中』医食同源・薬膳餃子", region: "関東地方", prefecture: "栃木", description: "熟練の職人が皮から手作り。身体に染み渡る薬膳の香り。", longDescription: "餃子の聖地・宇都宮において独自の輝き。注文を受けてから延ばす皮の弾力と、身体が温まる薬膳餡が最高。", cooking: "焼きも絶品ですが、ぜひ『水餃子』で！皮の本当の美味しさが際立ちます。", pairing: "滋味深いスープ 🍲", sauce: "店主推奨は、黒酢に生姜をたっぷりと。", price: 2550, count: 30, tags: ["宇都宮餃子", "薬膳"], color: "bg-slate-50", icon: "sparkles", image: "https://www.otoriyose.net/upload/item/62/00006270/dacab781bd14b4e.jpg" },
+            { id: 14, name: "石川の巨星！『餃子専門店ぽう』大きな餃子人気セット", region: "北陸地方", prefecture: "石川", description: "通常の2倍サイズ！食べ応えと, 生姜・梅の絶妙な三連星。", longDescription: "石川県能美市。一つひとつ丁寧に手包みされた巨大な餃子。大満足のサイズ感ながら、無添加なので後味スッキリ。", cooking: "大きめなので蒸し時間は少し長めに。最後に強火でパリッと！", pairing: "石川の地酒 🍶", sauce: "梅餃子には何もつけずにそのままで。", price: 4880, count: 36, tags: ["石川能美", "ジャンボ"], color: "bg-orange-50", icon: "award", image: "https://otona2020.itembox.design/product/022/000000002208/000000002208-01-l.jpg" },
+            { id: 6, name: "富山の至宝！『ミッちゃん餃子』モチパリ薄皮セット", region: "北陸地方", prefecture: "富山", description: "富山で30年以上愛される行列店。野菜の甘みと生姜が弾ける！", longDescription: "富山の家庭の味。焼けばパリッと、茹でればモチッとする薄皮。添加物不使用の安心感も魅力です。", cooking: "多めの差し水で蒸し上げ、最後に一気に水分を飛ばすのがコツ！", pairing: "冷えた白ワイン 🥂", sauce: "まずはそのまま、素材の甘みを楽しんで。", price: 3400, count: 24, tags: ["富山名物", "野菜たっぷり"], color: "bg-yellow-100", icon: "smile", image: "https://www.otoriyose.net/upload/item/115/00011548/3f2310173c78c50.jpg" },
+            { id: 5, name: "大阪の超新星！『餃子専門店チャンピオン』ひとくち餃子", region: "近畿地方", prefecture: "大阪", description: "大阪・今里の人気店. サクふわ食感。鶏肉とキャベツの極み。", longDescription: "季節ごとに工程を微調整したキャベツと国産鶏肉。一度食べ始めたら手が止まらない「魔力」のひとくちサイズ。", cooking: "強火で一気に。焼き時間は短めで皮のパリッと感を最大限に！", pairing: "焼酎のソーダ割り 🍸", sauce: "焼きはタレなし、または酢胡椒で。", price: 2750, count: 35, tags: ["大阪今里", "ひとくち"], color: "bg-red-50", icon: "trophy", image: "https://cdn.shopify.com/s/files/1/0622/4239/0147/files/IMG_2845.jpg?v=1739506998" },
+            { id: 12, name: "伊勢の伝説！『ぎょうざの美鈴』究極の手延べ餃子", region: "近畿地方", prefecture: "三重", description: "創業昭和38年。職人が一枚ずつ皮を延ばす伝統の技。", longDescription: "伊勢神宮近くの超有名店。注文を受けてから皮を延ばすお店の流儀を冷凍で再現。秘伝たまり醤油ダレが至高。", cooking: "仕上げに油を多めに使い、揚げ焼きのようにパリッとさせる！", pairing: "伊勢の地ビール 🍺", sauce: "付属の特製たまり醤油ダレが絶対条件。", price: 1900, count: 12, tags: ["伊勢の老舗", "手延べ皮"], color: "bg-amber-50", icon: "flame", image: "https://image1.shopserve.jp/gyouzanomisuzu-online.com/pic-labo/llimg/t0004_02.gif" },
+            { id: 1, name: "ミシュラン伝説！岡山「山東水餃大王」水餃子極みセット", region: "中国地方", prefecture: "岡山", description: "ビブグルマン掲載！厚さ1mmの限界を超えたモチモチ食感。", longDescription: "日生町のレジェンド。特級点心師が作る皮は圧倒的な弾力。秘伝の豆豉タレ目当てのリピーターも絶えません。", cooking: "泳がせるように茹で、浮き上がってからさらに1分待つのが秘訣！", pairing: "中国茶 🍵", sauce: "付属の豆豉タレ一択！", price: 6310, count: 40, tags: ["ミシュラン", "究極モチモチ"], color: "bg-blue-50", icon: "star", image: "https://santon-suigyo-daio.com/wp-content/uploads/2022/11/FC_20221107_0004.jpg" },
+            { id: 4, name: "下関の至芸！『餃子屋はまだ』職人手包み4種セット", region: "中国地方", prefecture: "山口", description: "山口・下関の名店. マーボー・大葉など4味を食べ比べ。", longDescription: "機械を一切使わず国産素材にこだわり抜く。職人の手包みだからこそ実現できる皮と具の密着感は感動もの。", cooking: "水分が飛んだら少量の油で焼き色を。手包みの薄皮がパリッと！", pairing: "炭酸水、またはレモンサワー 🍋", sauce: "4種の味を楽しむため、まずはタレなしで！", price: 7410, count: 48, tags: ["下関名物", "手包み"], color: "bg-orange-50", icon: "package", image: "https://imagedelivery.net/QondspN4HIUvB_R16-ddAQ/5f3da475d7e1d840cef4e6d5/575936aee4322829d163.png" },
+            { id: 13, name: "長崎の色彩！『台湾料理 老李』厳選5色水餃セット", region: "九州地方", prefecture: "長崎", description: "長崎・中華街の名店。芳寿豚100%の肉汁と5色の彩り。", longDescription: "最高級「長崎芳寿豚」を使用した餡は肉汁たっぷり。しそ、パクチーなど5色の皮がお祝いを華やかに彩ります。", cooking: "凍ったまま投入し、皮がぷっくり膨らむまで茹でるのが正解！", pairing: "台湾ビール 🍺", sauce: "黒酢だけで素材の香りを引き立てて。", price: 6579, count: 40, tags: ["長崎中華街", "5色の水餃"], color: "bg-pink-50", icon: "palette", image: "https://www.otoriyose.net/upload/item/121/00012158/878b29dfc1714f9.jpg" },
+            { id: 2, name: "別府の伝説！創業昭和22年『湖月』極薄皮の芸術品", region: "九州地方", prefecture: "大分", description: "別府の行列店. 職人が手包みした『究極の薄皮』と旨味。", longDescription: "一切の妥協なし。向こう側が透けるほど薄い自家製の皮。外はカリッと中はジューシーな、家族で囲む最高のご馳走。", cooking: "多めの油で揚げ焼きにするのが湖月流！パリパリ感を極限まで。", pairing: "キンキンに冷えたビール 🍺", sauce: "まずはタレなし。次は酢多めの醤油ダレで。", price: 6290, count: 50, tags: ["創業昭和22年", "別府の誇り"], color: "bg-yellow-50", icon: "map", image: "https://baseec-img-mng.akamaized.net/images/item/origin/d1dd9492ac43737c751b6943407ad9cd.jpg" }
         ];
 
         const REGIONS = ["北海道地方", "東北地方", "関東地方", "北陸地方", "近畿地方", "中国地方", "九州地方"];
@@ -95,7 +93,7 @@
                   <div className="w-14 h-1.5 bg-yellow-400 rounded-full animate-pulse delay-75"></div>
                 </div>
               </div>
-              <span className="text-[10px] font-black bg-black text-white px-3 py-1 rounded-full mt-2 border-2 border-yellow-400 shadow-lg">Gyoza Express</span>
+              <span className="text-[10px] font-black bg-black text-white px-3 py-1 rounded-full mt-2 border-2 border-yellow-400">Gyoza Express</span>
             </div>
           </div>
         );
@@ -111,7 +109,7 @@
           const currentGP = totalSpent / 100;
 
           const addToCart = (product) => {
-            if (totalSpent + product.price > ACTUAL_LIMIT) return;
+            if (totalSpent + product.price > 16000) return;
             const existing = cart.find(i => i.id === product.id);
             if (existing) setCart(cart.map(i => i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i));
             else setCart([...cart, { ...product, quantity: 1 }]);
@@ -123,12 +121,10 @@
             else setCart(cart.filter(i => i.id !== id));
           };
 
-          // 履歴モード表示
           if (ORDER_COMPLETED) {
             const orderedProducts = ORDERED_ITEMS.map(order => ({ ...GYOZA_DATA.find(p => p.id === order.id), ...order }));
             const totalOrderedCount = orderedProducts.reduce((sum, p) => sum + (p.count * p.quantity), 0);
             let currentStep = orderedProducts.every(p => p.status === 'delivered') ? 3 : (ORDER_STATUS === 'shipping' ? 2 : 1);
-
             return (
               <div className="min-h-screen bg-[#ff4d4d] pb-20 overflow-x-hidden text-center relative selection:bg-yellow-400 selection:text-black">
                 <RaimonBorder />
@@ -136,7 +132,7 @@
                   <div className="max-w-2xl mx-auto">
                     <div className="mb-12 flex justify-between items-center max-w-sm mx-auto relative">
                       <div className="absolute top-1/2 left-0 w-full h-1 bg-black/20 -translate-y-1/2 -z-10"></div>
-                      <div className="absolute top-1/2 left-0 h-1 bg-yellow-400 -translate-y-1/2 -z-10 transition-all duration-1000" style={{ width: currentStep === 1 ? '0%' : currentStep === 2 ? '50%' : '100%' }}></div>
+                      <div className="absolute top-1/2 left-0 h-1 bg-yellow-400 -translate-y-1/2 -z-10" style={{ width: currentStep === 1 ? '0%' : currentStep === 2 ? '50%' : '100%' }}></div>
                       <div className="flex flex-col items-center gap-2"><div className={`w-10 h-10 rounded-full border-4 border-black flex items-center justify-center font-black ${currentStep >= 1 ? 'bg-yellow-400' : 'bg-white'}`}><Icon name="check" size={20} /></div><span className="text-[10px] font-black uppercase text-white bg-black px-2">受付完了</span></div>
                       <div className="flex flex-col items-center gap-2"><div className={`w-10 h-10 rounded-full border-4 border-black flex items-center justify-center font-black ${currentStep >= 2 ? 'bg-yellow-400' : 'bg-white'}`}><Icon name="truck" size={20} /></div><span className="text-[10px] font-black uppercase text-white bg-black px-2">配送中</span></div>
                       <div className="flex flex-col items-center gap-2"><div className={`w-10 h-10 rounded-full border-4 border-black flex items-center justify-center font-black ${currentStep >= 3 ? 'bg-yellow-400 animate-bounce' : 'bg-white'}`}>{currentStep >= 3 ? <Icon name="star" size={20} /> : 3}</div><span className="text-[10px] font-black uppercase text-white bg-black px-2">到着！</span></div>
@@ -150,11 +146,11 @@
                 </header>
                 <main className="max-w-3xl mx-auto px-4 text-left relative z-10">
                   <div className="bg-white border-4 border-black rounded-[3rem] p-8 shadow-[12px_12px_0_0_rgba(0,0,0,1)]">
-                    <h2 className="text-2xl font-black mb-8 border-b-4 border-black pb-2 flex items-center gap-2 uppercase italic"><Icon name="clock" className="text-red-600" /> History</h2>
+                    <h2 className="text-2xl font-black mb-8 border-b-4 border-black pb-2 italic uppercase"><Icon name="clock" className="text-red-600 inline mr-2" /> History</h2>
                     <div className="space-y-6">
                       {orderedProducts.map(item => (
-                        <div key={item.id} className="group flex flex-col sm:flex-row gap-4 bg-slate-50 border-4 border-black p-5 rounded-[2.5rem] shadow-sm overflow-hidden relative">
-                          <img src={item.image} className="w-full sm:w-24 h-24 rounded-2xl border-2 border-black object-cover" />
+                        <div key={item.id} className="group flex flex-col sm:flex-row gap-4 bg-slate-50 border-4 border-black p-5 rounded-[2.5rem] shadow-sm relative">
+                          <img src={item.image} className="w-24 h-24 bg-slate-100 rounded-2xl border-2 border-black object-cover" />
                           <div className="flex-1 min-w-0">
                             <div className="flex justify-between items-start mb-1"><div className="flex items-center gap-1 text-[10px] font-black text-slate-400 uppercase"><Icon name="map-pin" size={10} /> {item.prefecture}</div>
                             {item.status === 'shipping' ? <span className="bg-yellow-400 text-black text-[10px] px-2 font-black rounded border border-black animate-pulse">配送中</span> : <span className="bg-red-600 text-white text-[10px] px-2 font-black rounded border border-black">到着済み</span>}
@@ -166,24 +162,14 @@
                         </div>
                       ))}
                     </div>
-                    <div className="mt-10 bg-yellow-50 border-4 border-black border-dashed rounded-[2.5rem] p-6 text-center">
-                        <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Capacity</p>
-                        <p className="text-4xl font-black text-slate-800 italic">TOTAL {totalOrderedCount} PCS</p>
-                    </div>
                   </div>
                 </main>
               </div>
             );
           }
 
-          // 選択ページ表示
           return (
             <div className="min-h-screen text-slate-900 pb-40 relative overflow-x-hidden selection:bg-yellow-400 selection:text-black">
-              <div className="fixed inset-0 pointer-events-none z-0">
-                <div className="absolute top-[10%] left-[5%] text-6xl animate-bounce opacity-20" style={{ animationDuration: '3s' }}>🐼</div>
-                <div className="absolute top-[20%] right-[10%] text-7xl animate-bounce opacity-20" style={{ animationDuration: '5s' }}>🍥</div>
-                <div className="absolute top-[30%] left-[40%] text-[15rem] font-black text-white opacity-[0.03] rotate-12">福</div>
-              </div>
               <RaimonBorder />
               <header className="px-6 py-12 text-center relative z-10">
                 <div className="bg-yellow-400 w-24 h-24 rounded-full border-4 border-black flex items-center justify-center mx-auto mb-6 shadow-[6px_6px_0_0_rgba(0,0,0,1)]"><span className="text-5xl font-black text-red-600">福</span></div>
@@ -196,90 +182,4 @@
               </header>
 
               <main className="max-w-4xl mx-auto px-4 py-8 relative z-10">
-                {REGIONS.map(region => {
-                  const items = GYOZA_DATA.filter(i => i.region === region);
-                  if (items.length === 0) return null;
-                  return (
-                    <section key={region} className="mb-20">
-                      <div className="mb-8 relative inline-block">
-                        <div className="absolute inset-0 bg-yellow-400 translate-x-2 translate-y-2 rounded-xl -z-10 border-4 border-black"></div>
-                        <h2 className="bg-white border-4 border-black text-slate-900 px-8 py-3 rounded-xl font-black text-2xl italic">★ {region} ★</h2>
-                      </div>
-                      <div className="grid md:grid-cols-2 gap-10">
-                        {items.map(product => {
-                          const inCart = cart.find(i => i.id === product.id)?.quantity || 0;
-                          return (
-                            <div key={product.id} className={`bg-white border-4 border-black rounded-[2.5rem] shadow-[10px_10px_0_0_rgba(0,0,0,1)] overflow-hidden transition-all hover:-translate-y-1 ${inCart > 0 ? 'ring-8 ring-yellow-400/40' : ''}`}>
-                                <div className="h-56 bg-slate-200 relative border-b-4 border-black overflow-hidden group">
-                                    <div className="absolute top-4 right-4 z-10 bg-black/80 text-white text-[10px] px-2 py-1 rounded flex items-center gap-1 shadow-md font-black">
-                                        <Icon name="map-pin" size={10} className="text-yellow-400" /> {product.prefecture}
-                                    </div>
-                                    <img src={product.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                                </div>
-                                <div className="p-6 text-left">
-                                    <h3 className="text-xl font-black mb-2 h-14 overflow-hidden leading-tight italic">{product.name}</h3>
-                                    <p className="text-xs text-slate-600 mb-6 font-bold leading-relaxed">{product.description}</p>
-                                    <div className="flex justify-between items-center mb-6">
-                                        <span className="bg-red-600 text-white px-3 py-1.5 rounded-lg border-2 border-black font-black text-[10px] uppercase shadow-[2px_2px_0_0_rgba(0,0,0,1)]">{product.count} PCS</span>
-                                        <button onClick={() => setSelectedDetail(product)} className="text-[10px] font-black bg-slate-100 border-2 border-black px-2 py-1 rounded hover:bg-black hover:text-white transition-all flex items-center gap-1"><Icon name="search" size={12} /> 詳細を見る</button>
-                                    </div>
-                                    <div className="flex items-center justify-center bg-black rounded-3xl p-1.5 gap-6 border-2 border-white/20 shadow-inner">
-                                        <button onClick={() => removeFromCart(product.id)} className="w-12 h-12 bg-white border-2 border-black rounded-xl font-black active:scale-90">-</button>
-                                        <span className="text-2xl font-black text-white italic">{inCart}</span>
-                                        <button onClick={() => addToCart(product)} disabled={totalSpent + product.price > 16000} className="w-12 h-12 bg-yellow-400 border-2 border-black rounded-xl font-black active:scale-90 disabled:bg-slate-700">+</button>
-                                    </div>
-                                </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </section>
-                  );
-                })}
-              </main>
-
-              <div className="fixed bottom-10 left-1/2 -translate-x-1/2 w-[95%] max-w-2xl z-50">
-                <div className="bg-white border-[5px] border-black rounded-[3rem] p-6 shadow-[12px_12px_0_0_rgba(0,0,0,1)] flex items-center justify-between gap-6 overflow-hidden">
-                  <div className="flex flex-col flex-1 pl-4 text-left">
-                    <p className="text-[10px] font-black text-slate-400 uppercase italic">Power Status:</p>
-                    <p className="text-4xl font-black italic">{currentGP.toFixed(1)} <span className="text-sm">/ 150.0</span></p>
-                  </div>
-                  <button onClick={() => setShowSummary(true)} disabled={cart.length === 0} className="bg-red-600 text-white border-4 border-black px-10 py-5 rounded-[2rem] font-black text-2xl shadow-[6px_6px_0_0_rgba(0,0,0,1)] active:translate-y-1">注文！ 🐼</button>
-                </div>
-              </div>
-
-              {selectedDetail && (
-                <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4" onClick={() => setSelectedDetail(null)}>
-                  <div className="bg-white border-4 border-black w-full max-w-lg rounded-[3rem] overflow-hidden relative shadow-2xl animate-in" onClick={e => e.stopPropagation()}>
-                    <button onClick={() => setSelectedDetail(null)} className="absolute top-4 right-4 w-10 h-10 bg-white border-2 border-black rounded-full font-black flex items-center justify-center z-20">✕</button>
-                    <div className="p-8 text-left max-h-[90vh] overflow-y-auto custom-scrollbar">
-                        <h3 className="text-2xl font-black mb-4 leading-tight italic">{selectedDetail.name}</h3>
-                        <img src={selectedDetail.image} className="w-full h-56 object-cover rounded-2xl border-4 border-black mb-6 shadow-lg" />
-                        <div className="bg-yellow-50 p-6 rounded-2xl border-2 border-black mb-6 italic font-bold">"{selectedDetail.longDescription}"</div>
-                        <div className="grid grid-cols-2 gap-4 mb-6">
-                            <div className="bg-slate-50 p-4 rounded-xl border-2 border-black text-center">
-                                <p className="text-[10px] font-black text-red-600 mb-1 uppercase flex items-center justify-center gap-1"><Icon name="utensils" size={14}/> Pairing</p>
-                                <p className="font-bold text-sm">{selectedDetail.pairing}</p>
-                            </div>
-                            <div className="bg-slate-50 p-4 rounded-xl border-2 border-black text-center">
-                                <p className="text-[10px] font-black text-blue-600 mb-1 uppercase flex items-center justify-center gap-1">✨ Sauce</p>
-                                <p className="font-bold text-sm">{selectedDetail.sauce}</p>
-                            </div>
-                        </div>
-                        <div className="bg-slate-900 text-white p-6 rounded-2xl relative shadow-xl">
-                            <p className="text-yellow-400 font-black text-xs mb-2 uppercase tracking-widest"><Icon name="flame" size={14} className="inline mr-1"/> Master's Tip</p>
-                            <p className="font-bold italic">{selectedDetail.cooking}</p>
-                        </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          );
-        };
-
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
-    </script>
-</body>
-</html>
+                {REGIONS
