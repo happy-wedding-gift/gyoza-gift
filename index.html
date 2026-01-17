@@ -28,7 +28,7 @@
         // ==========================================
         // 【管理者設定】
         // ==========================================
-        let ORDER_COMPLETED = false; // trueで履歴画面、falseで選択画面
+        let ORDER_COMPLETED = true; // trueで履歴画面、falseで選択画面
         const ORDER_STATUS = 'shipping'; 
         const DELIVERY_MAN_IMAGE = "bike.jpg"; 
         const COMPLETED_MESSAGE = "全国の餃子職人たちが、順次発送の準備を進めているあるよ！";
@@ -97,12 +97,9 @@
             render();
         }
 
-        // ==========================================
-        // 【修正箇所】render関数のロジックを整理
-        // ==========================================
         function render() {
             const app = document.getElementById('app-content');
-            app.innerHTML = ""; // 描画をクリア
+            app.innerHTML = ""; 
             
             if (ORDER_COMPLETED) {
                 renderHistoryMode(app);
@@ -110,7 +107,6 @@
                 renderSelectionMode(app);
             }
             
-            // Lucideアイコンの初期化
             if (window.lucide) window.lucide.createIcons();
         }
 
@@ -154,6 +150,12 @@
                             <div class="absolute w-full h-[4px] bg-black/10 bottom-8 sm:bottom-10"></div>
                             <div class="absolute flex flex-col items-center animate-delivery-run bottom-4 sm:bottom-6">
                                 <div class="relative w-32 sm:w-48 h-24 sm:h-32 flex items-end justify-center">
+                                    <div class="absolute left-0 top-1/2 -translate-y-1/2 flex flex-col gap-1.5 opacity-50 -translate-x-full pr-2">
+                                        <div class="w-8 sm:w-12 h-1 bg-white rounded-full"></div>
+                                        <div class="w-5 sm:w-8 h-1 bg-white rounded-full translate-x-2"></div>
+                                        <div class="w-8 sm:w-12 h-1 bg-white rounded-full"></div>
+                                    </div>
+                                    
                                     <img src="${DELIVERY_MAN_IMAGE}" class="max-w-full max-h-full object-contain drop-shadow-[6px_6px_0_rgba(0,0,0,0.3)]" />
                                 </div>
                                 <span class="text-[8px] sm:text-[10px] font-bold bg-black text-white px-2 py-0.5 rounded-full border-2 border-yellow-400 shadow-xl italic uppercase font-bold">Gyoza Express</span>
@@ -312,7 +314,6 @@
             if (window.lucide) window.lucide.createIcons();
         }
 
-        // --- 汎用アクション ---
         function changeQty(id, delta) {
             const current = cart[id] || 0;
             const next = current + delta;
