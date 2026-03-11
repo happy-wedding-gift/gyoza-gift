@@ -135,8 +135,13 @@
                   <div class="flex-1 min-w-0 font-heavy">
                     <div class="flex justify-between items-start mb-1">
                         <div class="flex items-center gap-1 text-[10px] text-slate-400 uppercase italic font-bold"><i data-lucide="map-pin" size="10"></i> ${item.prefecture}</div>
-                        ${item.status === 'delivered' ? '<span class="bg-red-600 text-white text-[10px] px-2 font-heavy rounded border border-black shadow-sm uppercase">到着済み</span>' : 
-                          '<span class="bg-yellow-400 text-black text-[10px] px-2 font-heavy rounded border border-black animate-pulse uppercase">配送中</span>'}
+                        ${item.status === 'delivered' ? 
+                          '<span class="bg-red-600 text-white text-[10px] px-2 font-heavy rounded border border-black shadow-sm uppercase">到着済み</span>' : 
+                          (item.status === 'shipping' ? 
+                            '<span class="bg-yellow-400 text-black text-[10px] px-2 font-heavy rounded border border-black animate-pulse uppercase">配送中</span>' : 
+                            '<span class="bg-slate-200 text-slate-500 text-[10px] px-2 font-heavy rounded border border-slate-300 uppercase">準備中</span>'
+                          )
+                        }
                     </div>
                     <p class="text-slate-800 text-lg leading-tight italic mb-1 font-bold">${item.name}</p>
                     <p class="text-xs text-red-600 mt-1 uppercase font-bold">${item.pcs} PCS × ${item.quantity}</p>
@@ -178,7 +183,7 @@
                     <h1 class="text-3xl sm:text-4xl md:text-6xl text-white mb-0 drop-shadow-[4px_4px_0_rgba(0,0,0,1)] uppercase italic leading-none font-bold">${currentStep === 3 ? "ALL DELIVERED!" : (currentStep === 1 ? "ORDER RECEIVED!" : "SHIPPING NOW!")}</h1>
 
                     ${currentStep === 1 ? `
-                        <div class="relative w-full flex flex-col items-center justify-center mt-0 mb-0 animate-in">
+                        <div class="relative w-full flex flex-col items-center justify-center mt-1 mb-0 animate-in">
                             <div class="w-64 h-64 sm:w-96 sm:h-96 flex items-center justify-center">
                                 <img src="${STAFF_IMAGE}" class="max-w-full max-h-full object-contain" alt="Staff" />
                             </div>
@@ -186,7 +191,7 @@
                     ` : ''}
 
                     ${currentStep === 3 ? `
-                        <div class="relative w-full flex flex-col items-center justify-center mt-0 mb-0 animate-in">
+                        <div class="relative w-full flex flex-col items-center justify-center mt-1 mb-0 animate-in">
                             <div class="w-64 h-64 sm:w-96 sm:h-96 flex items-center justify-center">
                                 <img src="${CHEF_IMAGE}" class="max-w-full max-h-full object-contain" alt="Chef" />
                             </div>
